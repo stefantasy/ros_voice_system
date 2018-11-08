@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+  <name>snowboy_wakeup</name>
+  <version>0.0.0</version>
+  <description>snowboy make hotword detector</description>
+
+  <maintainer email="corvin_zhang@corvin.cn">corvin</maintainer>
+
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>libblas-dev</build_depend>
+  <build_depend>audio_common_msgs</build_depend>
+  <run_depend>audio_common_msgs</run_depend>
+
+</package>

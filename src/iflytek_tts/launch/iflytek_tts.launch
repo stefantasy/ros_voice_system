@@ -1,0 +1,22 @@
+<!--
+  Copyright(C): 2016-2017 ROS小课堂
+  Author: www.corvin.cn
+  Description:
+    使用科大讯飞在线语音合成实现ROS下的在线语音合成功能.
+  History:
+    20180412:init this file.
+-->
+<launch>
+  <arg name="TTS_Topic" />
+
+  <node pkg="iflytek_tts" type="iflytek_tts_node" name="iflytek_tts_node" output="screen">
+    <param name="app_id" type="String" value="57207923" />
+    
+    <!--speaker name= xiaowanzi,xiaoxin,vinn,xiaofeng or xiaoqi etc-->
+    <param name="speaker_name" type="String" value="xiaoqi" />
+    <param name="voice_speed" type="int" value="50" />
+
+    <param name="tts_topic" value="$(arg TTS_Topic)" />
+    <param name="greet_word" type="String" value="科大迅飞在线语音合成模块启动成功" />
+  </node>
+</launch>

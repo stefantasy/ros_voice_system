@@ -1,0 +1,9 @@
+<launch>
+  <arg name="Wakeup_Topic" />
+
+  <node name="pocketSphinx_recognizer_node" pkg="pocketsphinx" type="recognizer.py" output="screen">
+    <param name="lm" value="$(find pocketsphinx)/launch/pocketsphinx.lm"/>
+    <param name="dict" value="$(find pocketsphinx)/launch/pocketsphinx.dic"/>
+    <param name="Wakeup_Topic" value="$(arg Wakeup_Topic)" />
+  </node>
+</launch>

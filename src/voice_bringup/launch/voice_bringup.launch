@@ -1,0 +1,104 @@
+<launch>
+<!-- ############################################################ -->
+<!---
+Author:
+       www.corvin.cn
+Description:
+  该launch文件为ROS下语音系统的总启动文件，当运行加载启动后会自动
+  的来启动语音唤醒,语音识别,语义理解,语音合成节点。需要注意的是这  
+  里由于实现方案较多，现在实现的所有语音功能唤醒模块有sphinx和snowboy,
+  语音识别用百度在线语音识别和科大讯飞在线语音识别功能实现，语义解析
+  目前使用图灵机器人的在线语义解析实现，对于语音合成功能使用百度在线
+  语音和科大讯飞在线语音合成实现，所有可用的节点都会在launch文件中列出，
+  但是并不是所有节点都启动，若想启动相应节点去掉注释即可，因此现在规定
+  默认的启动节点如下所列:
+  1.语音唤醒(WakeUp):pocketsphinx离线语音唤醒,唤醒词:科文
+  2.语音识别(ASR):科大讯飞在线语音识别功能;
+  3.语义处理(NLP):图灵机器人在线语义处理;
+  4.语音合成(TTS):科大讯飞在线语音合成模块;
+
+History:
+     20171212:init launch file
+     20171228:更新各话题名称获取方式，统一在该启动launch中设置，然后
+              传递给各分节点的launch文件，同时各分launch文件有自己的
+              参数，方便可以单独启动分节点。                           
+     20180117:新增语音控制小车移动和发送目的地导航功能。              
+     20180307:新增snowboy唤醒词检测功能。                             --> 
+<!--  ##############################################################  -->
+
+  <!-- Global arguments define here,you can update default value -->
+  <arg name="Wakeup_Topic" default="/voice_system/wakeup_topic" doc="wakeup topic" />
+  <arg name="ASR_Topic"    default="/voice_system/asr_topic"    doc="asr topic" />
+  <arg name="NLU_Topic"    default="/voice_system/nlu_topic"    doc="nlu topic" />
+  <arg name="TTS_Topic"    default="/voice_system/tts_topic"    doc="tts topic" />
+  <arg name="MOVE_Topic"   default="/voice_system/move_topic"   doc="move topic" />
+  <arg name="NAV_Topic"    default="/voice_system/nav_topic"    doc="navigate topic" />
+
+  <!-- ******************* WAKEUP NODE LIST START ******************** -->
+  <!-- startup pocketshinx and wakeup hotword detect node -->
+  <!--
+  <include file="$(find pocketsphinx)/launch/pocketsphinx.launch" >
+    <arg name="Wakeup_Topic" value="$(arg Wakeup_Topic)" />
+  </include>-->
+  <!--
+  <include file="$(find sphinx_wakeup)/launch/sphinx_wakeup.launch" >
+    <arg name="Wakeup_Topic" value="$(arg Wakeup_Topic)" />
+    <arg name="ASR_Topic" value="$(arg ASR_Topic)" />
+  </include>-->
+
+  <!-- startup snowboy hotword detector node -->
+  <include file="$(find snowboy_wakeup)/launch/snowboy_wakeup.launch" >
+    <arg name="ASR_Topic" value="$(arg ASR_Topic)" />
+  </include>
+  <!-- ******************* WAKEUP NODE LIST END ********************** -->
+
+
+  <!-- ******************* ASR NODE LIST START ********************** -->
+  <!-- startup asr node -->
+  <include file="$(find iflytek_asr)/launch/iflytek_asr.launch" >
+    <arg name="ASR_Topic" value="$(arg ASR_Topic)" />
+    <arg name="NLU_Topic" value="$(arg NLU_Topic)" />
+  </include>
+
+  <!-- startup baidu asr node -->
+  <!--
+  <include file="$(find baidu_speech)/launch/baidu_asr.launch" >
+    <arg name="ASR_Topic" value="$(arg ASR_Topic)" />
+    <arg name="NLU_Topic" value="$(arg NLU_Topic)" />
+  </include>-->
+
+  <!-- ******************** ASR NODE LIST END ************************ -->
+
+
+  <!-- ******************* NLU NODE LIST START *********************** -->
+  <!-- startup tuling nlu node -->
+  <include file="$(find tuling_nlu)/launch/tuling_nlu.launch" >
+    <arg name="NLU_Topic"  value="$(arg NLU_Topic)" />
+    <arg name="TTS_Topic"  value="$(arg TTS_Topic)" />
+    <arg name="MOVE_Topic" value="$(arg MOVE_Topic)" />
+    <arg name="NAV_Topic"  value="$(arg NAV_Topic)" />
+  </include>
+  <!-- ******************* NLU NODE LIST END ************************* -->
+
+
+  <!-- ******************* TTS NODE LIST START *********************** -->
+  <!-- startup iflytek_tts node 
+  <include file="$(find iflytek_tts)/launch/iflytek_tts.launch" >
+    <arg name="TTS_Topic" value="$(arg TTS_Topic)" />
+  </include>-->
+
+  <!-- startup baidu_tts node -->
+  <include file="$(find baidu_speech)launch/baidu_tts.launch" >
+    <arg name="TTS_Topic" value="$(arg TTS_Topic)" />
+  </include>
+  <!-- ******************* TTS NODE LIST END ************************* -->
+
+
+  <!-- ******************* VOICE MOVE NODE START ********************* -->
+  <include file="$(find voice_move)/launch/voice_move.launch">
+    <arg name="MOVE_Topic" value="$(arg MOVE_Topic)" />
+  </include>
+  <!-- ******************* VOICE MOVE NODE END *********************** -->
+    
+</launch>
+
